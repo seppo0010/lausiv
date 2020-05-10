@@ -1,19 +1,36 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import io from 'socket.io-client';
+import { Container } from '@material-ui/core';
+import SelectRoom from './SelectRoom';
 
-class App extends React.Component {
-  componentDidMount() {
-    const socket = io();
-    socket.connect()
-    socket.on('connect', () => {
+declare interface AppState {
+  roomName?: string
+}
+
+class App extends React.Component<{}, AppState> {
+  socket: SocketIOClient.Socket;
+
+  constructor(props: any) {
+    super(props);
+    this.socket = io();
+    this.socket.connect();
+    this.socket.on('connect', () => {
       console.log('connected')
     })
   }
 
+  onRoomSelected(roomName: string) {
+    this.socket.emit('selectRoom', roomName)
+    this.setState({roomName})
+  }
+
   render() {
+    const { roomName } = this.state || {};
     return (
-      <div className="App">
-      </div>
+      <Container maxWidth="sm">
+        <br />
+        {!roomName && <SelectRoom onRoomSelected={(room) => this.onRoomSelected(room)}></SelectRoom>}
+      </Container>
     );
   }
 }
