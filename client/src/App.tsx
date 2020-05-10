@@ -1,26 +1,14 @@
-import React, { ChangeEvent } from 'react';
-import io from 'socket.io-client';
+import React from 'react';
 import { Container } from '@material-ui/core';
 import SelectRoom from './SelectRoom';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
 } from "react-router-dom";
+import ViewRoom from './ViewRoom';
 
 class App extends React.Component {
-  socket: SocketIOClient.Socket;
-
-  constructor(props: any) {
-    super(props);
-    this.socket = io();
-    this.socket.connect();
-    this.socket.on('connect', () => {
-      console.log('connected')
-    })
-  }
-
   render() {
     return (
       <Container maxWidth="sm">
@@ -28,6 +16,7 @@ class App extends React.Component {
         <Router>
           <Switch>
             <Route exact path="/room/:room">
+              <ViewRoom></ViewRoom>
             </Route>
             <Route exact path="/">
               <SelectRoom></SelectRoom>
