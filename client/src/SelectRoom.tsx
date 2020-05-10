@@ -1,32 +1,19 @@
-import React, { ChangeEvent } from 'react';
-import { Button, Container, TextField, InputLabel } from '@material-ui/core';
+import React, { ChangeEvent, useState } from 'react';
+import { Button, TextField, InputLabel } from '@material-ui/core';
+import { useHistory } from "react-router-dom";
 
-declare interface SelectRoomProps {
-    onRoomSelected: (room: string) => void;
-}
-declare interface SelectRoomState {
-  roomName: string
-}
 
-export default class SelectRoom extends React.Component<SelectRoomProps, SelectRoomState> {
-  componentDidMount() {
-    this.setState({ roomName: 'my room'})
-  }
-
-  handleOnChange(event: ChangeEvent<HTMLInputElement>) {
-    this.setState({ roomName: event.target.value })
-  }
-
-  render() {
-    const { roomName } = (this.state || {}) as SelectRoomState;
-    return (
-      <form>
-        <InputLabel>
-          Room:<br />
-          <TextField fullWidth defaultValue={roomName || ''} autoFocus={true} onChange={(e: ChangeEvent<HTMLInputElement>) => this.handleOnChange(e)} />
-        </InputLabel><br />
-        <Button fullWidth type="submit" variant="contained" color="primary" onClick={() => this.props.onRoomSelected(this.state.roomName || '')}>Join room</Button>
-      </form>
-    );
-  }
+export default function SelectRoom() {
+  const [room, setRoom] = useState('my room')
+  const history = useHistory()
+  const onSubmit = () => { history.push(`/room/${room}`) }
+  return (
+    <form onSubmit={(e) => e.preventDefault()}>
+      <InputLabel>
+        Room:<br />
+        <TextField fullWidth defaultValue={room} autoFocus={true} onChange={(e: ChangeEvent<HTMLInputElement>) => setRoom(e.target.value)} />
+      </InputLabel><br />
+      <Button fullWidth type="submit" variant="contained" color="primary" onClick={() => onSubmit()}>Join room</Button>
+    </form>
+  );
 }
